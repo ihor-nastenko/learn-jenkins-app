@@ -23,5 +23,20 @@ npm test'''
       }
     }
 
+    stage('Docker publish') {
+      environment {
+        registry = 'ihor8nastenko8devops/test-jenkins-pipeline'
+        registryCredential = 'ihor8nastenko8devops'
+      }
+      steps {
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+
+      }
+    }
+
   }
 }
