@@ -1,6 +1,5 @@
 pipeline {
   agent any
-
   stages {
     stage('Build') {
       agent {
@@ -8,6 +7,7 @@ pipeline {
           image 'node:18-alpine'
           reuseNode true
         }
+
       }
       steps {
         sh '''
@@ -23,6 +23,7 @@ pipeline {
           image 'node:18-alpine'
           reuseNode true
         }
+
       }
       steps {
         sh '''
@@ -39,6 +40,7 @@ pipeline {
             'ihor8nastenko8devops/test-jenkins-pipeline'
           )
         }
+
       }
     }
 
@@ -49,7 +51,9 @@ pipeline {
             dockerImage.push()
           }
         }
+
       }
     }
+
   }
 }
