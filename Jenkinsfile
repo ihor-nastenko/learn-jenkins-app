@@ -9,7 +9,6 @@ pipeline {
           reuseNode true
         }
       }
-
       steps {
         sh '''
           npm ci
@@ -25,7 +24,6 @@ pipeline {
           reuseNode true
         }
       }
-
       steps {
         sh '''
           test -f build/index.html
@@ -37,7 +35,9 @@ pipeline {
     stage('Docker Build') {
       steps {
         script {
-          dockerImage = docker.build('ihor8nastenko8devops/test-jenkins-pipeline')
+          dockerImage = docker.build(
+            'ihor8nastenko8devops/test-jenkins-pipeline'
+          )
         }
       }
     }
