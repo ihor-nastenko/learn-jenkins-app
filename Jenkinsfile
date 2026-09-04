@@ -1,42 +1,55 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:18-alpine'
-    }
+  agent any
 
-  }
   stages {
     stage('Build') {
+      agent {
+        docker {
+          image 'node:18-alpine'
+          reuseNode true
+        }
+      }
+
       steps {
-        sh '''ls -la
-          node --version
-          npm --version
+        sh '''
           npm ci
-          npm run build'''
+          npm run build
+        '''
       }
     }
 
     stage('Test') {
+      agent {
+        docker {
+          image 'node:18-alpine'
+          reuseNode true
+        }
+      }
+
       steps {
-        sh '''test -f build/index.html
-npm test'''
+        sh '''
+          test -f build/index.html
+          npm test
+        '''
       }
     }
 
-    stage('Docker publish') {
-      environment {
-        registry = 'ihor8nastenko8devops/test-jenkins-pipeline'
-        registryCredential = 'ihor8nastenko8devops'
-      }
+    stage('Docker Build') {
       steps {
         script {
-          docker.withRegistry( '', registryCredential ) {
+          dockerImage = docker.build('ihor8nastenko8devops/test-jenkins-pipeline')
+        }
+      }
+    }
+
+    stage('Docker Publish') {
+      steps {
+        script {
+          docker.withRegistry('', 'ihor8nastenko8devops') {
             dockerImage.push()
           }
         }
-
       }
     }
-
   }
 }
